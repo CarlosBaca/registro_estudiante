@@ -1,32 +1,38 @@
-# nombre del workflow
+# Nombre que tendrá el workflow dentro de GitHub Actions
 name: Comprobar programa Python
 
-#el evento se ejecutara cada vez que se realice un push
+# Evento que iniciará automáticamente el workflow
+# En este caso se ejecutará cada vez que se realice un push
 on:
   push:
 
-# aqui definimos los trabajos que ejecutara github actions
+# Aquí se definen los trabajos que ejecutará GitHub Actions
 jobs:
-  verificar:
-    #sistema operativo donde se ejecutara el trabajo
-    runs-on: ubuntu-lastest
 
+  # Nombre interno del primer trabajo
+  verificar:
+
+    # Sistema operativo donde se ejecutará el trabajo
+    runs-on: ubuntu-latest
+
+    # Lista de pasos que realizará el trabajo
     steps:
+
       # PASO 1
-      # descarga dentro del runner el contenido del repositorio
+      # Descargar dentro del runner el contenido del repositorio
       - name: Obtener repositorio
         uses: actions/checkout@v7
 
       # PASO 2
-      #prepara python dentro del entorno de ejecucion
+      # Preparar Python dentro del entorno de ejecución
       - name: Configurar Python
         uses: actions/setup-python@v7
         with:
-          # version de python que utilizara el trabajo
+          # Versión de Python que utilizará este trabajo
           python-version: '3.14'
 
       # PASO 3
-      #comprobamos que programa.py existe dentro del repositorio
+      # Comprobar que programa.py existe dentro del repositorio
       - name: Verificar archivo
         run: test -f programa.py
 
@@ -36,15 +42,14 @@ jobs:
         run: python -m py_compile programa.py
 
       # PASO 5
-      # EJECUTAR EL PROGRAMA
+      # Ejecutar realmente el programa
       - name: Ejecutar programa
         run: python programa.py
 
       # PASO 6
-      # guardamos la salida y comprobamos que el resultado sea 24
-      - name: Commprobar resultado esperado
+      # Guardar la salida del programa y comprobar
+      # que contenga el resultado TOTAL: 24
+      - name: Comprobar resultado esperado
         run: |
           python programa.py > salida.txt
-          grep "TOTAL:24" salida.txt
-
-        
+          grep "TOTAL: 24" salida.txt
