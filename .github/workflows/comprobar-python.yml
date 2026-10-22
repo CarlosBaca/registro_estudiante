@@ -1,12 +1,50 @@
+# nombre del workflow
 name: Comprobar programa Python
 
+#el evento se ejecutara cada vez que se realice un push
 on:
   push:
 
+# aqui definimos los trabajos que ejecutara github actions
 jobs:
   verificar:
+    #sistema operativo donde se ejecutara el trabajo
     runs-on: ubuntu-lastest
 
     steps:
+      # PASO 1
+      # descarga dentro del runner el contenido del repositorio
       - name: Obtener repositorio
         uses: actions/checkout@v7
+
+      # PASO 2
+      #prepara python dentro del entorno de ejecucion
+      - name: Configurar Python
+        uses: actions/setup-python@v7
+        with:
+          # version de python que utilizara el trabajo
+          python-version: '3.14'
+
+      # PASO 3
+      #comprobamos que programa.py existe dentro del repositorio
+      - name: Verificar archivo
+        run: test -f programa.py
+
+      # PASO 4
+      # Comprobar que programa.py no tenga errores de sintaxis
+      - name: Verificar sintaxis
+        run: python -m py_compile programa.py
+
+      # PASO 5
+      # EJECUTAR EL PROGRAMA
+      - name: Ejecutar programa
+        run: python programa.py
+
+      # PASO 6
+      # guardamos la salida y comprobamos que el resultado sea 24
+      - name: Commprobar resultado esperado
+        run: |
+          python programa.py > salida.txt
+          grep "TOTAL:24" salida.txt
+
+        
